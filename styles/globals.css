@@ -18,5 +18,14 @@ a {
 }
 
 body {
-  background-color: #88effd;
+  background-image: url(https://wallpapercave.com/wp/wp10108782.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  height: 120vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
 }
