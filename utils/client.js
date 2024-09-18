@@ -9,11 +9,11 @@ const clientCredentials = {
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  databaseURL: process.env.NEXT_FIREBASE_PUBLIC_DATABASE_URL,
+  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
 };
 
 if (!firebase.apps.length) {
-  firebase?.initializeApp(clientCredentials);
+  firebase.initializeApp(clientCredentials);
 }
 
 export { firebase, clientCredentials };
