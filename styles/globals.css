@@ -23,7 +23,7 @@ body {
   width: 100vw;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Prevent scrolling */
+  overflow: auto;
 }
 
 body::before {
@@ -46,7 +46,7 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Adjust opacity to dim */
+  background-color: rgba(2, 2, 2, 0.5); /* Adjust opacity to dim */
   z-index: 0; /* Ensure this is above the background image */
 }
 
