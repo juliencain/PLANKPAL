@@ -5,7 +5,7 @@ import {
   Navbar, Container, Nav,
 } from 'react-bootstrap';
 
-export default function NavBar() {
+export default function SkateCompanyNavBar() {
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
@@ -13,6 +13,7 @@ export default function NavBar() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
             {/* CLOSE NAVBAR ON LINK SELECTION: https://stackoverflow.com/questions/72813635/collapse-on-select-react-bootstrap-navbar-with-nextjs-not-working */}
+            <Navbar.Brand>PLANK BY COMPANNY:</Navbar.Brand>
             <Link passHref href="/element">
               <Nav.Link>ELEMENT</Nav.Link>
             </Link>

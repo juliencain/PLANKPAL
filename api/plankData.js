@@ -1,7 +1,7 @@
-import { clientCredentials } from "../utils/client";
+import { clientCredentials } from '../utils/client';
+import { getSingleCompany } from './companyData';
 
 const endpoint = clientCredentials.databaseURL;
-
 
 // Fetch planks by uid
 const getPlanks = (uid) => new Promise((resolve, reject) => {
@@ -25,7 +25,6 @@ const getPlanks = (uid) => new Promise((resolve, reject) => {
     });
 });
 
-
 const getSinglePlank = (firebaseKey) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/planks/${firebaseKey}.json`, {
     method: 'GET',
@@ -47,18 +46,19 @@ const getSinglePlank = (firebaseKey) => new Promise((resolve, reject) => {
     });
 });
 
-
-const viewPlankDetails = (firebaseKey) => new Promise((resolve, reject) => {
-  getSinglePlank(firebaseKey)
-    .then((plankObj) => {
-      resolve(plankObj);
-    })
-    .catch((error) => {
-      console.error('Error fetching plank details:', error);
-      reject(error);
-    });
-});
-
+const viewPlankDetails = async (firebaseKey) => {
+  try {
+    const plankObj = await getSinglePlank(firebaseKey);
+    if (plankObj.company_id) {
+      const companyObj = await getSingleCompany(plankObj.company_id); // Fetch company data
+      return { ...plankObj, companyObj }; // Combine plank and company data
+    }
+    return { ...plankObj, companyObj: null }; // Handle missing company
+  } catch (error) {
+    console.error('Error fetching plank details:', error);
+    throw error;
+  }
+};
 
 const deletePlank = (firebaseKey) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/planks/${firebaseKey}.json`, {
@@ -110,6 +110,17 @@ const updatePlank = (payload) => new Promise((resolve, reject) => {
       reject(error);
     });
 });
+const getPlanksByCompany = (firebaseKey) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/planks.json?orderBy="company_id"&equalTo="${firebaseKey}"`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => resolve(Object.values(data)))
+    .catch(reject);
+});
 
 export {
   getPlanks,
@@ -118,4 +129,5 @@ export {
   deletePlank,
   getSinglePlank,
   updatePlank,
+  getPlanksByCompany,
 };

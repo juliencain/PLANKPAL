@@ -5,6 +5,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import { Button } from 'react-bootstrap';
 import { useAuth } from '../../utils/context/authContext';
+import { getCompanies } from '../../api/companyData';
 import { createPlank, updatePlank } from '../../api/plankData';
 
 // Define initial state for the form fields
@@ -25,13 +26,17 @@ function PlankForm({ obj }) {
   // Use Next.js router for page navigation
   const router = useRouter();
 
+  const [companies, setCompanies] = useState([]);
+
   // Get the current user from authentication context
   const { user } = useAuth();
 
   // Effect to update formInput if obj has a firebaseKey (for editing an existing plank)
   useEffect(() => {
+    getCompanies(user.uid).then(setCompanies);
+
     if (obj.firebaseKey) setFormInput(obj);
-  }, [obj]);
+  }, [obj, user.uid]);
 
   // Handle changes to form fields
   const handleChange = (e) => {
@@ -79,16 +84,29 @@ function PlankForm({ obj }) {
         />
       </FloatingLabel>
 
-      {/* COMPANY SELECT */}
-      <Form.Group className="mb-3">
-        <Form.Control as="select" value={formInput.company} name="company" onChange={handleChange}>
-          <option disabled value="">Select Company...</option>
-          <option value="Baker">Baker</option>
-          <option value="Zero">Zero</option>
-          <option value="Element">Element</option>
-          <option value="Santa Cruz">Santa Cruz</option>
-        </Form.Control>
-      </Form.Group>
+      {/* Company SELECT  */}
+      <FloatingLabel controlId="floatingSelect" label="Company">
+        <Form.Select
+          aria-label="Company"
+          name="company_id"
+          onChange={handleChange}
+          className="mb-3"
+          value={obj.company_id} // FIXME: modify code to remove error
+          required
+        >
+          <option value="">Select a Company</option>
+          {
+            companies.map((company) => (
+              <option
+                key={company.firebaseKey}
+                value={company.firebaseKey}
+              >
+                {company.name}
+              </option>
+            ))
+          }
+        </Form.Select>
+      </FloatingLabel>
 
       {/* SHAPE INPUT */}
       <FloatingLabel controlId="floatingShape" label="Shape" className="mb-3">
@@ -140,6 +158,7 @@ PlankForm.propTypes = {
     shape: PropTypes.string,
     size: PropTypes.string,
     image: PropTypes.string,
+    company_id: PropTypes.string,
     firebaseKey: PropTypes.string,
   }),
 };

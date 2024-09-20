@@ -2,66 +2,79 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { deletePlank, getSinglePlank } from '../../api/plankData';
+import { getSinglePlank } from '../../api/plankData';
+import { getSingleCompany } from '../../api/companyData'; // Make sure to import this function
 
 export default function ViewPlank() {
   const [plankDetails, setPlankDetails] = useState({});
+  const [companyName, setCompanyName] = useState(''); // State for company name
   const [fetchError, setFetchError] = useState(null);
   const router = useRouter();
   const { firebaseKey } = router.query;
 
   useEffect(() => {
-    getSinglePlank(firebaseKey).then(setPlankDetails);
-    console.warn('plankDetails', plankDetails);
-  }, [firebaseKey, plankDetails]);
+    if (firebaseKey) {
+      getSinglePlank(firebaseKey)
+        .then((data) => {
+          console.log('Fetched Plank Details:', data);
+          setPlankDetails(data);
+
+          // Fetch company name based on company_id from plank details
+          if (data.company_id) {
+            return getSingleCompany(data.company_id);
+          }
+          throw new Error('Company ID not found in plank details.');
+        })
+        .then((companyData) => {
+          setCompanyName(companyData.name || 'Unknown Company'); // Use the company name
+        })
+        .catch((error) => {
+          console.error('Error fetching plank details:', error);
+          setFetchError('Error fetching plank details.');
+        });
+    }
+  }, [firebaseKey]);
 
   if (fetchError) {
     return <div>{fetchError}</div>;
   }
 
-  // if (!accessoryDetails) {
-  //   return <div>Loading...</div>;
-  // }
-
   const {
-    image, title, company, shape, size,
+    image, title, shape, size,
   } = plankDetails;
 
   // Log values before rendering
   console.log('Plank details - Title:', title);
-  console.log('Plank details - Company:', company);
+  console.log('Plank details - Company:', companyName);
   console.log('Plank details - Image:', image);
   console.log('Plank details - Shape:', shape);
   console.log('Plank details - Size:', size);
 
-  // eslint-disable-next-line no-unused-vars
-  const deleteThisPlank = () => {
-    if (window.confirm(`Are you sure you want to delete ${title}?`)) {
-      deletePlank(firebaseKey)
-        .then(() => {
-          router.push('/planks');
-        })
-        .catch((deleteError) => {
-          console.error('Error deleting accessory:', deleteError);
-          setFetchError('Error deleting accessory.');
-        });
-    }
-  };
+  // const deleteThisPlank = () => {
+  //   if (window.confirm(`Are you sure you want to delete ${title}?`)) {
+  //     deletePlank(firebaseKey)
+  //       .then(() => {
+  //         router.push('/planks');
+  //       })
+  //       .catch((deleteError) => {
+  //         console.error('Error deleting plank:', deleteError);
+  //         setFetchError('Error deleting plank.');
+  //       });
+  //   }
+  // };
 
   return (
-    <>
-      <div className="mt-5 d-flex flex-wrap">
-        <div className="d-flex flex-column">
-          <img src={plankDetails.image || '/default-image.jpg'} alt={title || 'No title available'} style={{ width: '300px' }} />
-        </div>
-        <div className="text-white ms-5 details">
-          <h5>
-            {plankDetails.title || 'No title available'} {plankDetails.company || 'No company information available'}
-            {plankDetails.shape || 'No shape available'} {plankDetails.size || 'No size information available'}
-          </h5>
-        </div>
+    <div className="mt-5 d-flex flex-wrap">
+      <div className="d-flex flex-column">
+        <img src={image} alt={title} style={{ width: '300px' }} />
       </div>
-      <hr />
-    </>
+      <div className="text-black ms-5 details">
+        <h5>
+          {title} by {companyName || 'Unknown Company'}
+        </h5>
+        <p>Shape: {shape || 'N/A'}</p>
+        <p>Size: {size || 'N/A'}</p>
+      </div>
+    </div>
   );
 }

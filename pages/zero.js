@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import { getPlanks } from '../api/plankData';
 import { useAuth } from '../utils/context/authContext';
@@ -7,9 +6,10 @@ import PlankCard from '../components/PlankCard';
 function ZeroPlanks() {
   const [zeroPlanks, setZeroPlanks] = useState([]);
   const { user } = useAuth();
+  const targetCompanyId = '-RiBsfuTafbEQsd7eAULxV'; // Updated company_id
 
   function filter(planks) {
-    return planks.filter((plank) => plank.company === 'Zero'); // Ensure 'baker' is the correct value
+    return planks.filter((plank) => plank.company_id === targetCompanyId); // Filter by company_id
   }
 
   const getAllThePlanks = () => {

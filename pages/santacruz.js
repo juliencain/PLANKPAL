@@ -1,15 +1,15 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import { getPlanks } from '../api/plankData';
 import { useAuth } from '../utils/context/authContext';
 import PlankCard from '../components/PlankCard';
 
-function SantacruzPlanks() {
-  const [santacruzPlanks, setSantacruzPlanks] = useState([]);
+function SantaCruzPlanks() {
+  const [santaCruzPlanks, setSantaCruzPlanks] = useState([]);
   const { user } = useAuth();
+  const targetCompanyId = '-HiBsfuTafbEQsd7eAULxV'; // Updated company_id
 
   function filter(planks) {
-    return planks.filter((plank) => plank.company === 'Santa Cruz'); // Ensure 'baker' is the correct value
+    return planks.filter((plank) => plank.company_id === targetCompanyId); // Filter by company_id
   }
 
   const getAllThePlanks = () => {
@@ -17,7 +17,7 @@ function SantacruzPlanks() {
       getPlanks(user.uid)
         .then((allPlanks) => {
           const filtered = filter(allPlanks);
-          setSantacruzPlanks(filtered);
+          setSantaCruzPlanks(filtered);
         })
         .catch((error) => console.error('Failed to fetch planks:', error));
     }
@@ -30,8 +30,8 @@ function SantacruzPlanks() {
   return (
     <div className="text-center my-4">
       <div className="d-flex flex-wrap">
-        {santacruzPlanks.length > 0 ? (
-          santacruzPlanks.map((plank) => (
+        {santaCruzPlanks.length > 0 ? (
+          santaCruzPlanks.map((plank) => (
             <PlankCard key={plank.firebaseKey} plankObj={plank} onUpdate={getAllThePlanks} />
           ))
         ) : (
@@ -42,4 +42,4 @@ function SantacruzPlanks() {
   );
 }
 
-export default SantacruzPlanks;
+export default SantaCruzPlanks;
