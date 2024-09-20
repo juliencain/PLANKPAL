@@ -18,14 +18,39 @@ a {
 }
 
 body {
-  background-image: url(https://wallpapercave.com/wp/wp10108782.jpg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  display: flex;
-  flex-direction: column;
+  position: relative; /* Ensure the body is positioned for the pseudo-element */
   height: 120vh;
   width: 100vw;
   margin: 0;
   padding: 0;
+  overflow: hidden; /* Prevent scrolling */
+}
+
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url(https://wallpapercave.com/wp/wp10108782.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1; /* Place behind other content */
+}
+
+.dimming-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Adjust opacity to dim */
+  z-index: 0; /* Ensure this is above the background image */
+}
+
+.content {
+  position: relative; /* Ensure content is above the overlay */
+  z-index: 1; /* Bring content above the dimming layer */
 }

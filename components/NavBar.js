@@ -23,9 +23,6 @@ export default function NavBar() {
             <Link passHref href="/accessories">
               <Nav.Link>ACCESSORIES</Nav.Link>
             </Link>
-            <Link passHref href="/skateCompanies">
-              <Nav.Link>PLANKS BY COMPANY</Nav.Link>
-            </Link>
             <Button variant="danger" onClick={signOut}>Sign Out</Button>
           </Nav>
         </Navbar.Collapse>

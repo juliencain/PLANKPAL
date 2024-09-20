@@ -6,9 +6,10 @@ import PlankCard from '../components/PlankCard';
 function ElementPlanks() {
   const [elementPlanks, setElementPlanks] = useState([]);
   const { user } = useAuth();
+  const targetCompanyId = '-PiBsfuTafbEQsd7eAULxV'; // Updated company_id
 
   function filter(planks) {
-    return planks.filter((plank) => plank.company === 'Element'); // Ensure 'baker' is the correct value
+    return planks.filter((plank) => plank.company_id === targetCompanyId); // Filter by company_id
   }
 
   const getAllThePlanks = () => {
@@ -24,7 +25,6 @@ function ElementPlanks() {
 
   useEffect(() => {
     getAllThePlanks();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.uid]); // Run when user.uid changes
 
   return (

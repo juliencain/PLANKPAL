@@ -6,12 +6,12 @@ import PlankCard from '../components/PlankCard';
 function BakerPlanks() {
   const [bakerPlanks, setBakerPlanks] = useState([]);
   const { user } = useAuth();
+  const targetCompanyId = '-MiBsfuTafbEQsd7eAULxV'; // Set your desired company_id here
 
   function filter(planks) {
-    return planks.filter((plank) => plank.company === 'Baker'); // Ensure 'baker' is the correct value
+    return planks.filter((plank) => plank.company_id === targetCompanyId); // Filter by company_id
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const getAllThePlanks = () => {
     if (user && user.uid) {
       getPlanks(user.uid)
@@ -25,7 +25,7 @@ function BakerPlanks() {
 
   useEffect(() => {
     getAllThePlanks();
-  }, [getAllThePlanks, user.uid]); // Run when user.uid changes
+  }, [user.uid]); // Run when user.uid changes
 
   return (
     <div className="text-center my-4">
